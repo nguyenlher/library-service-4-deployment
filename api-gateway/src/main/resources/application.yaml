@@ -1,0 +1,27 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: ${USER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/users/**
+        - id: book-service
+          uri: ${BOOK_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/books/**
+        - id: borrow-service
+          uri: ${BORROW_SERVICE_URL:http://localhost:8086}
+          predicates:
+            - Path=/borrow/**
+        - id: payment-service
+          uri: ${PAYMENT_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/payments/**
+        - id: notification-service
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/notifications/**

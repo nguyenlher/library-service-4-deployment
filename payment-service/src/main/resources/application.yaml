@@ -1,0 +1,22 @@
+server:
+  port: ${PORT:8084}
+
+spring:
+  datasource:
+    url: jdbc:${DATABASE_URL}/${DB_NAME:payment_db}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+vnpay:
+  tmn-code: OAZCZS0F
+  hash-secret: D0DTJ6R932I9FJPC6G9J3M0DSLIM6AEM
+  pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return-url: ${PAYMENT_RETURN_URL:http://localhost:8084/payments/vnpay/return}
+  ipn-url: ${PAYMENT_IPN_URL:http://localhost:8084/payments/vnpay/ipn}
+  currency: VND
+  version: 2.1.0
+  command: pay
+  order-type: other

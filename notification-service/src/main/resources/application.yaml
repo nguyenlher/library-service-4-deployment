@@ -1,0 +1,25 @@
+server:
+  port: ${PORT:8085}
+
+spring:
+  datasource:
+    url: jdbc:${DATABASE_URL}/${DB_NAME:notification_db}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nguyenlh2004@gmail.com
+    password: fsos zhhk zbgr yyfu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000

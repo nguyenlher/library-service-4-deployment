@@ -1,0 +1,11 @@
+server:
+  port: ${PORT:8082}
+
+spring:
+  datasource:
+    url: jdbc:${DATABASE_URL}/${DB_NAME:book_db}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
