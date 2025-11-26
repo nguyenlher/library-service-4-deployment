@@ -27,11 +27,11 @@ const BorrowHistoryPage = () => {
     setError(null);
 
     axios
-      .get(`http://localhost:8086/borrows/user/${userId}`)
+      .get(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/user/${userId}`)
       .then(async (response) => {
         if (cancelled) return;
 
-        const borrowData = response.data || [];
+        const borrowData = Array.isArray(response.data) ? response.data : [];
         
         // Fetch book details for each borrow
         const borrowsWithBooks = await Promise.all(

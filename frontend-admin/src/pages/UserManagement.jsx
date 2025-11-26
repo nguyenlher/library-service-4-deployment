@@ -26,19 +26,21 @@ const UserManagement = () => {
     try {
       setLoading(true);
       // Fetch users from auth-service
-      const userResponse = await fetch('http://localhost:8083/users');
+      const userResponse = await fetch(`${process.env.REACT_APP_AUTH_SERVICE_URL}/users`);
       const usersData = await userResponse.json();
-      const regularUsers = usersData.filter(user => user.role === 'USER');
+      const regularUsers = Array.isArray(usersData) ? usersData.filter(user => user.role === 'USER') : [];
 
       // Fetch profiles from user-service
-      const profileResponse = await fetch('http://localhost:8081/users');
+      const profileResponse = await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users`);
       const profilesData = await profileResponse.json();
 
       // Create map of userId to profile
       const profileMap = {};
-      profilesData.forEach(profile => {
-        profileMap[profile.userId] = profile;
-      });
+      if (Array.isArray(profilesData)) {
+        profilesData.forEach(profile => {
+          profileMap[profile.userId] = profile;
+        });
+      }
 
       // Merge user data with profile data
       const usersWithProfiles = regularUsers.map(user => ({
@@ -89,11 +91,11 @@ const UserManagement = () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
       try {
         // Delete profile first
-        await fetch(`http://localhost:8081/users/${userId}/profile`, {
+        await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users/${userId}/profile`, {
           method: 'DELETE',
         });
         // Then delete user
-        await fetch(`http://localhost:8083/users/${userId}`, {
+        await fetch(`${process.env.REACT_APP_AUTH_SERVICE_URL}/users/${userId}`, {
           method: 'DELETE',
         });
         fetchUsers(); // Refresh danh sách
@@ -108,7 +110,7 @@ const UserManagement = () => {
     try {
       if (editingUser) {
         // Update user status in auth-service
-        const userUpdateResponse = await fetch(`http://localhost:8083/users/${editingUser.id}`, {
+        const userUpdateResponse = await fetch(`${process.env.REACT_APP_AUTH_SERVICE_URL}/users/${editingUser.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +124,7 @@ const UserManagement = () => {
         if (!userUpdateResponse.ok) throw new Error('Failed to update user');
 
         // Update profile
-        const profileResponse = await fetch(`http://localhost:8081/users/profile/${editingUser.id}`, {
+        const profileResponse = await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users/profile/${editingUser.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -139,7 +141,7 @@ const UserManagement = () => {
       } else {
         // Add new user
         // First create user in auth-service
-        const userResponse = await fetch('http://localhost:8083/users', {
+        const userResponse = await fetch(`${process.env.REACT_APP_AUTH_SERVICE_URL}/users`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -154,7 +156,7 @@ const UserManagement = () => {
         const newUser = await userResponse.json();
 
         // Then create profile in user-service
-        const profileResponse = await fetch('http://localhost:8081/users/profile', {
+        const profileResponse = await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users/profile`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

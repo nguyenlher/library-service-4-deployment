@@ -27,11 +27,11 @@ const FineHistoryPage = () => {
     setError(null);
 
     axios
-      .get(`http://localhost:8086/fines/user/${userId}`)
+      .get(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines/user/${userId}`)
       .then(async (response) => {
         if (cancelled) return;
 
-        const fineData = response.data || [];
+        const fineData = Array.isArray(response.data) ? response.data : [];
         
         // Fetch book details for each fine
         const finesWithBooks = await Promise.all(
@@ -149,7 +149,7 @@ const FineHistoryPage = () => {
     if (fine.status !== 'UNPAID') return;
 
     try {
-      const response = await axios.post('http://localhost:8084/payments/vnpay', {
+      const response = await axios.post(`${process.env.REACT_APP_PAYMENT_SERVICE_URL}/payments/vnpay`, {
         userId: parseInt(localStorage.getItem('userId')),
         amount: fine.amount,
         referenceId: fine.id,

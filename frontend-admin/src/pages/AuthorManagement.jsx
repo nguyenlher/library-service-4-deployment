@@ -29,7 +29,7 @@ const AuthorManagement = () => {
       setLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`);
       const data = await response.json();
-      setAuthors(data);
+      setAuthors(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching authors:', error);
     } finally {
@@ -100,7 +100,7 @@ const AuthorManagement = () => {
       // Kiểm tra xem tác giả có còn ràng buộc với sách không
       const booksResponse = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`);
       const books = await booksResponse.json();
-      const authorBooks = books.filter(book => book.authorId === authorId);
+      const authorBooks = Array.isArray(books) ? books.filter(book => book.authorId === authorId) : [];
 
       if (authorBooks.length > 0) {
         alert(`Không thể xóa tác giả này vì còn ${authorBooks.length} cuốn sách đang sử dụng. Vui lòng xóa hoặc thay đổi tác giả của các cuốn sách này trước.`);

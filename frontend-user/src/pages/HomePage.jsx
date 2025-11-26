@@ -81,7 +81,7 @@ const HomePage = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`);
         if (!cancelled) {
-          setBooks(response.data || []);
+          setBooks(Array.isArray(response.data) ? response.data : []);
           setError(null);
         }
       } catch (fetchError) {

@@ -40,7 +40,7 @@ const PaymentFineSuccess = () => {
     localStorage.setItem('processedFinePayments', JSON.stringify(processedPayments));
 
     // Get payment details to get referenceId (fineId) and userId
-    axios.get(`http://localhost:8084/payments/${paymentId}`)
+    axios.get(`${process.env.REACT_APP_PAYMENT_SERVICE_URL}/payments/${paymentId}`)
       .then(paymentResponse => {
         console.log('Payment details:', paymentResponse.data);
         const payment = paymentResponse.data;
@@ -48,7 +48,7 @@ const PaymentFineSuccess = () => {
         // Update fine status to PAID
         console.log('Paying fine:', payment.referenceId);
 
-        return axios.put(`http://localhost:8086/fines/${payment.referenceId}/pay`)
+        return axios.put(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines/${payment.referenceId}/pay`)
           .then(fineResponse => {
             console.log('Fine paid successfully:', fineResponse.data);
           });

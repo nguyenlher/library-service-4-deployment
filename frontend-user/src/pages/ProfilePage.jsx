@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/users/${userId}/profile`, {
+      const response = await axios.get(`${process.env.REACT_APP_USER_SERVICE_URL}/users/${userId}/profile`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
       setProfile(response.data);
@@ -54,7 +54,7 @@ const ProfilePage = () => {
           address: profile.address
         };
 
-        await axios.put(`http://localhost:8081/users/profile/${profile.id}`, updateData, {
+        await axios.put(`${process.env.REACT_APP_USER_SERVICE_URL}/users/profile/${profile.id}`, updateData, {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
 

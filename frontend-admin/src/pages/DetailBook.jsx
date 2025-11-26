@@ -62,7 +62,7 @@ const DetailBook = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`);
       const data = await response.json();
-      setAuthors(data);
+      setAuthors(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching authors:', error);
     }
@@ -70,9 +70,9 @@ const DetailBook = () => {
 
   const fetchPublishers = async () => {
     try {
-      const response = await fetch('http://localhost:8082/publishers');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers`);
       const data = await response.json();
-      setPublishers(data);
+      setPublishers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching publishers:', error);
     }
@@ -108,7 +108,7 @@ const DetailBook = () => {
   const handleEdit = () => {
     setEditingBook(book);
     setSelectedFile(null);
-    setSelectedAuthors(book.authors ? book.authors.map(a => a.id) : []);
+    setSelectedAuthors(book.authors && Array.isArray(book.authors) ? book.authors.map(a => a.id) : []);
     setFormData({
       title: book.title || '',
       isbn: book.isbn || '',
@@ -119,7 +119,7 @@ const DetailBook = () => {
       borrowFee: book.borrowFee || 0,
       publishYear: book.publishYear || new Date().getFullYear(),
       publisherId: book.publisherId || '',
-      authorIds: book.authors ? book.authors.map(a => a.id) : []
+      authorIds: book.authors && Array.isArray(book.authors) ? book.authors.map(a => a.id) : []
     });
     setShowModal(true);
   };
@@ -155,7 +155,7 @@ const DetailBook = () => {
       };
 
       // Update book
-      const response = await fetch(`http://localhost:8082/books/${book.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${book.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ const DetailBook = () => {
   const handleDelete = async () => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sách này?')) {
       try {
-        const response = await fetch(`http://localhost:8082/books/${id}`, {
+        const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${id}`, {
           method: 'DELETE',
         });
         

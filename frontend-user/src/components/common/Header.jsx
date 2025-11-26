@@ -24,7 +24,7 @@ const Header = () => {
     axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/categories`)
       .then((response) => {
         if (!cancelled) {
-          setCategories(response.data || []);
+          setCategories(Array.isArray(response.data) ? response.data : []);
         }
       })
       .catch(() => {

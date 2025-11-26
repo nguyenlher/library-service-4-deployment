@@ -21,10 +21,10 @@ const FineManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:8081/users');
+      const response = await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users`);
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -37,10 +37,10 @@ const FineManagement = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8086/borrows/user/${userId}`);
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/user/${userId}`);
       if (response.ok) {
         const data = await response.json();
-        setUserBorrows(data);
+        setUserBorrows(Array.isArray(data) ? data : []);
       }
     } catch (error) {
       console.error('Error fetching user borrows:', error);
@@ -51,7 +51,7 @@ const FineManagement = () => {
   const fetchFines = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8086/fines');
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines`);
       if (!response.ok) {
         console.error('Fines endpoint returned', response.status);
         setFines([]);
@@ -59,11 +59,13 @@ const FineManagement = () => {
       }
       const data = await response.json();
 
-      const usersRes = await fetch('http://localhost:8081/users');
+      const usersRes = await fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users`);
       const users = usersRes.ok ? await usersRes.json() : [];
 
       const userMap = {};
-      users.forEach(u => { if (u.userId != null) userMap[u.userId] = u.name; });
+      if (Array.isArray(users)) {
+        users.forEach(u => { if (u.userId != null) userMap[u.userId] = u.name; });
+      }
 
       const enriched = Array.isArray(data) ? data.map(fine => ({
         ...fine,
@@ -113,7 +115,7 @@ const FineManagement = () => {
   const handlePayFine = async (fineId) => {
     if (!window.confirm('Xác nhận đã thanh toán phí phạt?')) return;
     try {
-      await fetch(`http://localhost:8086/fines/${fineId}/pay`, { method: 'PUT' });
+      await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines/${fineId}/pay`, { method: 'PUT' });
       fetchFines();
     } catch (error) {
       console.error('Error paying fine:', error);
@@ -123,7 +125,7 @@ const FineManagement = () => {
   const handleSendReminder = async (fineId) => {
     if (!window.confirm('Gửi email nhắc nhở thanh toán đến người dùng?')) return;
     try {
-      const response = await fetch(`http://localhost:8085/api/notifications/fine-payment-reminder/${fineId}`, { 
+      const response = await fetch(`${process.env.REACT_APP_NOTIFICATION_SERVICE_URL}/api/notifications/fine-payment-reminder/${fineId}`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -145,7 +147,7 @@ const FineManagement = () => {
 
   const handleAddFine = async () => {
     try {
-      const response = await fetch('http://localhost:8086/fines', {
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -180,7 +182,7 @@ const FineManagement = () => {
 
   const handleUpdateFine = async () => {
     try {
-      const response = await fetch(`http://localhost:8086/fines/${editingFine.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines/${editingFine.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -203,7 +205,7 @@ const FineManagement = () => {
   const handleDeleteFine = async (fineId) => {
     if (!window.confirm('Xác nhận xóa phí phạt?')) return;
     try {
-      await fetch(`http://localhost:8086/fines/${fineId}`, { method: 'DELETE' });
+      await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines/${fineId}`, { method: 'DELETE' });
       fetchFines();
     } catch (error) {
       console.error('Error deleting fine:', error);

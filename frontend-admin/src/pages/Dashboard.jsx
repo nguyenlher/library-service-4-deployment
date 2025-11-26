@@ -22,27 +22,27 @@ const Dashboard = () => {
         setError(null);
 
         const [usersRes, booksRes, borrowsRes, finesRes] = await Promise.allSettled([
-          axios.get('http://localhost:8083/users?role=USER'), // User service
-          axios.get('http://localhost:8082/books'), // Book service
-          axios.get('http://localhost:8086/borrows'), // Borrow service
-          axios.get('http://localhost:8086/fines') // Fine service
+          axios.get(`${process.env.REACT_APP_AUTH_SERVICE_URL}/users?role=USER`), // User service
+          axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`), // Book service
+          axios.get(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows`), // Borrow service
+          axios.get(`${process.env.REACT_APP_BORROW_SERVICE_URL}/fines`) // Fine service
         ]);
 
         // Xử lý response
         const totalUsers = usersRes.status === 'fulfilled' 
-          ? usersRes.value.data.length 
+          ? (Array.isArray(usersRes.value.data) ? usersRes.value.data.length : 0)
           : 0;
         
         const totalBooks = booksRes.status === 'fulfilled' 
-          ? booksRes.value.data.length 
+          ? (Array.isArray(booksRes.value.data) ? booksRes.value.data.length : 0)
           : 0;
         
         const totalBorrows = borrowsRes.status === 'fulfilled' 
-          ? borrowsRes.value.data.length 
+          ? (Array.isArray(borrowsRes.value.data) ? borrowsRes.value.data.length : 0)
           : 0;
         
         const totalFines = finesRes.status === 'fulfilled' 
-          ? finesRes.value.data.length 
+          ? (Array.isArray(finesRes.value.data) ? finesRes.value.data.length : 0)
           : 0;
 
         setStats({

@@ -77,7 +77,7 @@ const CheckoutPage = () => {
       try {
         const userId = localStorage.getItem('userId') || 1;
         
-        const response = await axios.post('http://localhost:8084/payments/vnpay', {
+        const response = await axios.post(`${process.env.REACT_APP_PAYMENT_SERVICE_URL}/payments/vnpay`, {
           userId: Number(userId),
           amount: totalAmount,
           referenceId: book?.id,

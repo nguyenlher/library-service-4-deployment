@@ -24,7 +24,7 @@ const PublisherManagement = () => {
       setLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers`);
       const data = await response.json();
-      setPublishers(data);
+      setPublishers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching publishers:', error);
     } finally {

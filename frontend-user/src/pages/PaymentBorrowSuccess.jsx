@@ -40,7 +40,7 @@ const PaymentBorrowSuccess = () => {
     localStorage.setItem('processedPayments', JSON.stringify(processedPayments));
 
     // Get payment details to get referenceId (bookId) and userId
-    axios.get(`http://localhost:8084/payments/${paymentId}`)
+    axios.get(`${process.env.REACT_APP_PAYMENT_SERVICE_URL}/payments/${paymentId}`)
       .then(paymentResponse => {
         console.log('Payment details:', paymentResponse.data);
         const payment = paymentResponse.data;
@@ -55,7 +55,7 @@ const PaymentBorrowSuccess = () => {
 
         console.log('Creating borrow with data:', borrowData);
 
-        return axios.post('http://localhost:8086/borrows', borrowData)
+        return axios.post(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows`, borrowData)
           .then(borrowResponse => {
             console.log('Borrow created successfully:', borrowResponse.data);
             // Decrease available copies of the book

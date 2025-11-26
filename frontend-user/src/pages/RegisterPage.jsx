@@ -50,7 +50,7 @@ const RegisterPage = () => {
       const user = registerResponse.data;
 
       // Create profile in user-service
-      await axios.post('http://localhost:8081/users/profile', {
+      await axios.post(`${process.env.REACT_APP_USER_SERVICE_URL}/users/profile`, {
         userId: user.id,
         name: formData.name,
         phone: formData.phone,

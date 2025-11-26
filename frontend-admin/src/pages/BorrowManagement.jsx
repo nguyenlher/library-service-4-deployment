@@ -29,18 +29,18 @@ const BorrowManagement = () => {
   const fetchUsersAndBooks = async () => {
     try {
       const [usersRes, booksRes] = await Promise.all([
-        fetch('http://localhost:8081/users'),
-        fetch('http://localhost:8082/books')
+        fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users`),
+        fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`)
       ]);
 
       if (usersRes.ok) {
         const usersData = await usersRes.json();
-        setUsers(usersData);
+        setUsers(Array.isArray(usersData) ? usersData : []);
       }
 
       if (booksRes.ok) {
         const booksData = await booksRes.json();
-        setBooks(booksData);
+        setBooks(Array.isArray(booksData) ? booksData : []);
       }
     } catch (error) {
       console.error('Error fetching users/books:', error);
@@ -50,36 +50,40 @@ const BorrowManagement = () => {
   const fetchBorrows = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8086/borrows');
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows`);
       const data = await response.json();
 
       // fetch user profiles and books to resolve names
       try {
         const [usersRes, booksRes] = await Promise.all([
-          fetch('http://localhost:8081/users'),
-          fetch('http://localhost:8082/books')
+          fetch(`${process.env.REACT_APP_USER_SERVICE_URL}/users`),
+          fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`)
         ]);
 
         const usersData = usersRes.ok ? await usersRes.json() : [];
         const booksData = booksRes.ok ? await booksRes.json() : [];
 
         const userMap = {};
-        usersData.forEach(u => {
-          // UserProfileResponseDto has userId and name
-          if (u.userId != null) userMap[u.userId] = u.name || '';
-        });
+        if (Array.isArray(usersData)) {
+          usersData.forEach(u => {
+            // UserProfileResponseDto has userId and name
+            if (u.userId != null) userMap[u.userId] = u.name || '';
+          });
+        }
 
         const bookMap = {};
-        booksData.forEach(b => {
-          if (b.id != null) bookMap[b.id] = b.title || '';
-        });
+        if (Array.isArray(booksData)) {
+          booksData.forEach(b => {
+            if (b.id != null) bookMap[b.id] = b.title || '';
+          });
+        }
 
         // attach resolved names to borrow objects for display
-        const enriched = data.map(borrow => ({
+        const enriched = Array.isArray(data) ? data.map(borrow => ({
           ...borrow,
           user: { name: userMap[borrow.userId] || 'N/A' },
           book: { title: bookMap[borrow.bookId] || 'N/A' }
-        }));
+        })) : [];
 
         setBorrows(enriched);
       } catch (innerErr) {
@@ -136,11 +140,11 @@ const BorrowManagement = () => {
     try {
       if (currentStatus === 'BORROWED') {
         // Trường hợp 1: BORROWED -> gọi /return để chuyển thành RETURNED
-        await fetch(`http://localhost:8086/borrows/${borrowId}/return`, { method: 'PUT' });
+        await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/${borrowId}/return`, { method: 'PUT' });
       } else if (currentStatus === 'LATE_RETURNED') {
         // Trường hợp 2: LATE_RETURNED -> chỉ cập nhật ngày trả, giữ nguyên trạng thái
         const returnDate = new Date().toISOString().split('T')[0];
-        await fetch(`http://localhost:8086/borrows/${borrowId}`, {
+        await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/${borrowId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -159,7 +163,7 @@ const BorrowManagement = () => {
   const handleDelete = async (borrowId) => {
     if (!window.confirm('Bạn có muốn xóa bản ghi mượn này?')) return;
     try {
-      await fetch(`http://localhost:8086/borrows/${borrowId}`, { method: 'DELETE' });
+      await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/${borrowId}`, { method: 'DELETE' });
       fetchBorrows();
     } catch (error) {
       console.error('Error deleting borrow:', error);
@@ -168,7 +172,7 @@ const BorrowManagement = () => {
 
   const handleAddBorrow = async () => {
     try {
-      const response = await fetch('http://localhost:8086/borrows', {
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -194,7 +198,7 @@ const BorrowManagement = () => {
 
   const handleEditBorrow = async () => {
     try {
-      const response = await fetch(`http://localhost:8086/borrows/${editingBorrow.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/${editingBorrow.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

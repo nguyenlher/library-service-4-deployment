@@ -50,7 +50,7 @@ const DetailBookPage = () => {
 
     let cancelled = false;
     axios
-      .get('http://localhost:8086/borrows/count', { params: { bookId: book.id } })
+      .get(`${process.env.REACT_APP_BORROW_SERVICE_URL}/borrows/count`, { params: { bookId: book.id } })
       .then((response) => {
         if (!cancelled) {
           setBorrowCount(response.data?.count ?? 0);
@@ -177,7 +177,7 @@ const DetailBookPage = () => {
                         return;
                       }
                       try {
-                        const response = await axios.get(`http://localhost:8081/users/${userId}/profile`);
+                        const response = await axios.get(`${process.env.REACT_APP_USER_SERVICE_URL}/users/${userId}/profile`);
                         if (response.data.borrowLock) {
                           alert('Bạn đã bị chặn mượn sách. Yêu cầu hoàn tất tất cả khoản phạt để có thể thực hiện mượn sách.');
                           return;

@@ -21,7 +21,7 @@ const BookPage = () => {
       .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/categories`)
       .then((response) => {
         if (!cancelled) {
-          setCategories(response.data || []);
+          setCategories(Array.isArray(response.data) ? response.data : []);
         }
       })
       .catch(() => {
@@ -39,7 +39,7 @@ const BookPage = () => {
       .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`)
       .then((response) => {
         if (!cancelled) {
-          setBooks(response.data || []);
+          setBooks(Array.isArray(response.data) ? response.data : []);
         }
       })
       .catch(() => {
