@@ -21,7 +21,7 @@ const Header = () => {
   useEffect(() => {
     let cancelled = false;
     setCategoryError(null);
-    axios.get('http://localhost:8082/books/categories')
+    axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/categories`)
       .then((response) => {
         if (!cancelled) {
           setCategories(response.data || []);

@@ -45,7 +45,7 @@ const BookManagement = () => {
   const fetchBooks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8082/books');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`);
       const data = await response.json();
       setBooks(data);
     } catch (error) {
@@ -57,7 +57,7 @@ const BookManagement = () => {
 
   const fetchAuthors = async () => {
     try {
-      const response = await fetch('http://localhost:8082/authors');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`);
       const data = await response.json();
       setAuthors(data);
     } catch (error) {
@@ -67,7 +67,7 @@ const BookManagement = () => {
 
   const fetchPublishers = async () => {
     try {
-      const response = await fetch('http://localhost:8082/publishers');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers`);
       const data = await response.json();
       setPublishers(data);
     } catch (error) {
@@ -160,7 +160,7 @@ const BookManagement = () => {
   const handleDelete = async (bookId) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sách này?')) {
       try {
-        await fetch(`http://localhost:8082/books/${bookId}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${bookId}`, {
           method: 'DELETE',
         });
         fetchBooks(); // Refresh danh sách
@@ -202,7 +202,7 @@ const BookManagement = () => {
 
       if (editingBook) {
         // Update book
-        await fetch(`http://localhost:8082/books/${editingBook.id}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${editingBook.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ const BookManagement = () => {
         });
       } else {
         // Add new book
-        await fetch('http://localhost:8082/books', {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

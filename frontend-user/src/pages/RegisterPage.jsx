@@ -41,7 +41,7 @@ const RegisterPage = () => {
 
     try {
       // Register user in auth-service
-      const registerResponse = await axios.post('http://localhost:8083/auth/register', {
+      const registerResponse = await axios.post(`${process.env.REACT_APP_AUTH_SERVICE_URL}/auth/register`, {
         email: formData.email,
         password: formData.password,
         role: 'USER'

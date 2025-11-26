@@ -41,7 +41,7 @@ const DetailBook = () => {
   const fetchBookDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8082/books/${id}`);
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${id}`);
       if (response.ok) {
         const data = await response.json();
         setBook(data);
@@ -60,7 +60,7 @@ const DetailBook = () => {
 
   const fetchAuthors = async () => {
     try {
-      const response = await fetch('http://localhost:8082/authors');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`);
       const data = await response.json();
       setAuthors(data);
     } catch (error) {

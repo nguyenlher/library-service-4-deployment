@@ -37,7 +37,7 @@ const FineHistoryPage = () => {
         const finesWithBooks = await Promise.all(
           fineData.map(async (fine) => {
             try {
-              const bookResponse = await axios.get(`http://localhost:8082/books/${fine.bookId}`);
+              const bookResponse = await axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${fine.bookId}`);
               return {
                 ...fine,
                 book: bookResponse.data

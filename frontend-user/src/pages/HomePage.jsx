@@ -79,7 +79,7 @@ const HomePage = () => {
     let cancelled = false;
     const loadBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:8082/books');
+        const response = await axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`);
         if (!cancelled) {
           setBooks(response.data || []);
           setError(null);

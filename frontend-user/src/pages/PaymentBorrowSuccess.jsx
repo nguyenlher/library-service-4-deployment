@@ -59,14 +59,14 @@ const PaymentBorrowSuccess = () => {
           .then(borrowResponse => {
             console.log('Borrow created successfully:', borrowResponse.data);
             // Decrease available copies of the book
-            return axios.get(`http://localhost:8082/books/${payment.referenceId}`)
+            return axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${payment.referenceId}`)
               .then(bookResponse => {
                 const book = bookResponse.data;
                 const updatedBook = {
                   ...book,
                   availableCopies: book.availableCopies - 1
                 };
-                return axios.put(`http://localhost:8082/books/${payment.referenceId}`, updatedBook);
+                return axios.put(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${payment.referenceId}`, updatedBook);
               });
           });
       })

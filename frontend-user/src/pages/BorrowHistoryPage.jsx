@@ -37,7 +37,7 @@ const BorrowHistoryPage = () => {
         const borrowsWithBooks = await Promise.all(
           borrowData.map(async (borrow) => {
             try {
-              const bookResponse = await axios.get(`http://localhost:8082/books/${borrow.bookId}`);
+              const bookResponse = await axios.get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${borrow.bookId}`);
               return {
                 ...borrow,
                 book: bookResponse.data

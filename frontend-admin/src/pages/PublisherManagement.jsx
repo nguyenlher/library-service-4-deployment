@@ -22,7 +22,7 @@ const PublisherManagement = () => {
   const fetchPublishers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8082/publishers');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers`);
       const data = await response.json();
       setPublishers(data);
     } catch (error) {
@@ -76,7 +76,7 @@ const PublisherManagement = () => {
   const handleDelete = async (publisherId) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa nhà xuất bản này?')) {
       try {
-        await fetch(`http://localhost:8082/publishers/${publisherId}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers/${publisherId}`, {
           method: 'DELETE',
         });
         fetchPublishers();
@@ -94,13 +94,13 @@ const PublisherManagement = () => {
       };
 
       if (editingPublisher) {
-        await fetch(`http://localhost:8082/publishers/${editingPublisher.id}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers/${editingPublisher.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(publisherData),
         });
       } else {
-        await fetch('http://localhost:8082/publishers', {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/publishers`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(publisherData),

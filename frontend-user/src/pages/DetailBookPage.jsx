@@ -20,7 +20,7 @@ const DetailBookPage = () => {
     setError(null);
 
     axios
-      .get(`http://localhost:8082/books/${id}`)
+      .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${id}`)
       .then((response) => {
         if (!cancelled) {
           setBook(response.data);
@@ -76,7 +76,7 @@ const DetailBookPage = () => {
     const categoryIds = book.categories.map((category) => category.id);
     let cancelled = false;
     axios
-      .get('http://localhost:8082/books')
+      .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`)
       .then((response) => {
         if (cancelled) return;
         const candidates = (response.data || [])

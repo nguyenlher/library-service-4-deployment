@@ -32,7 +32,7 @@ const CheckoutPage = () => {
     setError(null);
 
     axios
-      .get(`http://localhost:8082/books/${id}`)
+      .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/${id}`)
       .then((response) => {
         if (!cancelled) {
           setBook(response.data);

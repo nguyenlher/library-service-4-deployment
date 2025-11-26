@@ -27,7 +27,7 @@ const AuthorManagement = () => {
   const fetchAuthors = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8082/authors');
+      const response = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`);
       const data = await response.json();
       setAuthors(data);
     } catch (error) {
@@ -98,7 +98,7 @@ const AuthorManagement = () => {
   const handleDelete = async (authorId) => {
     try {
       // Kiểm tra xem tác giả có còn ràng buộc với sách không
-      const booksResponse = await fetch('http://localhost:8082/books');
+      const booksResponse = await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`);
       const books = await booksResponse.json();
       const authorBooks = books.filter(book => book.authorId === authorId);
 
@@ -108,7 +108,7 @@ const AuthorManagement = () => {
       }
 
       if (window.confirm('Bạn có chắc chắn muốn xóa tác giả này?')) {
-        await fetch(`http://localhost:8082/authors/${authorId}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors/${authorId}`, {
           method: 'DELETE',
         });
         fetchAuthors(); // Refresh danh sách
@@ -131,7 +131,7 @@ const AuthorManagement = () => {
 
       if (editingAuthor) {
         // Update author
-        await fetch(`http://localhost:8082/authors/${editingAuthor.id}`, {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors/${editingAuthor.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const AuthorManagement = () => {
         });
       } else {
         // Add new author
-        await fetch('http://localhost:8082/authors', {
+        await fetch(`${process.env.REACT_APP_BOOK_SERVICE_URL}/authors`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

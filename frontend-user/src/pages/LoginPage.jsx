@@ -12,7 +12,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8083/auth/login', {
+      const response = await axios.post(`${process.env.REACT_APP_AUTH_SERVICE_URL}/auth/login`, {
         email,
         password
       });
@@ -44,7 +44,7 @@ const LoginPage = () => {
       
       // Lấy thông tin profile (tùy chọn)
       try {
-        const profileResponse = await axios.get(`http://localhost:8081/users/${userId}/profile`, {
+        const profileResponse = await axios.get(`${process.env.REACT_APP_USER_SERVICE_URL}/users/${userId}/profile`, {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
         const profile = profileResponse.data;
@@ -63,7 +63,7 @@ const LoginPage = () => {
       
       if (userRole === 'ADMIN' || userRole === 'LIBRARIAN') {
         console.log('Redirecting ADMIN/LIBRARIAN to dashboard'); // Debug log
-        window.location.href = 'http://localhost:3001/dashboard';
+        window.location.href = process.env.REACT_APP_ADMIN_FRONTEND_URL;
       } else {
         console.log('Redirecting USER to home page'); // Debug log
         navigate('/home');

@@ -18,7 +18,7 @@ const BookPage = () => {
   useEffect(() => {
     let cancelled = false;
     axios
-      .get('http://localhost:8082/books/categories')
+      .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books/categories`)
       .then((response) => {
         if (!cancelled) {
           setCategories(response.data || []);
@@ -36,7 +36,7 @@ const BookPage = () => {
     let cancelled = false;
     setError(null);
     axios
-      .get('http://localhost:8082/books')
+      .get(`${process.env.REACT_APP_BOOK_SERVICE_URL}/books`)
       .then((response) => {
         if (!cancelled) {
           setBooks(response.data || []);
