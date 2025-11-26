@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.library.book_service.entity.Author;
@@ -16,6 +17,7 @@ import com.library.book_service.repository.BookRepository;
 import com.library.book_service.repository.CategoryRepository;
 import com.library.book_service.repository.PublisherRepository;
 
+@Profile("init")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -36,12 +38,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (bookRepository.count() == 0) {
-            createSampleData();
-            System.out.println("Sample book data initialized successfully!");
-        } else {
-            System.out.println("Book data already exists, skipping initialization.");
-        }
+        createSampleData();
+        System.out.println("Sample book data initialized successfully!");
     }
 
     private void createSampleData() {

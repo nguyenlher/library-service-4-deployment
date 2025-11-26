@@ -3,11 +3,13 @@ package com.library.borrow_service.config;
 import java.time.LocalDateTime;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.library.borrow_service.entity.Borrow;
 import com.library.borrow_service.repository.BorrowRepository;
 
+@Profile("init")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -19,12 +21,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (borrowRepository.count() == 0) {
-            createSampleData();
-            System.out.println("Sample borrow data initialized successfully!");
-        } else {
-            System.out.println("Borrow data already exists, skipping initialization.");
-        }
+        createSampleData();
+        System.out.println("Sample borrow data initialized successfully!");
     }
 
     private void createSampleData() {

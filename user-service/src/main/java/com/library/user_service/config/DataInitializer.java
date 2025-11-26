@@ -3,11 +3,13 @@ package com.library.user_service.config;
 import java.math.BigDecimal;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.library.user_service.entity.UserProfile;
 import com.library.user_service.repository.UserProfileRepository;
 
+@Profile("init")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -19,15 +21,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if data already exists
-        if (userProfileRepository.count() == 0) {
-            // Create sample user profiles
-            // Note: These user_ids should correspond to users created in auth-service
-            createSampleUserProfiles();
-            System.out.println("Sample user profiles initialized successfully!");
-        } else {
-            System.out.println("User profiles already exist, skipping initialization.");
-        }
+        // Always create sample user profiles when init profile is active
+        createSampleUserProfiles();
+        System.out.println("Sample user profiles initialized successfully!");
     }
 
     private void createSampleUserProfiles() {

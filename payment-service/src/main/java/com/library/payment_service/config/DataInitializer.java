@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.library.payment_service.entity.Payment;
@@ -12,6 +13,7 @@ import com.library.payment_service.entity.PaymentLog;
 import com.library.payment_service.repository.PaymentLogRepository;
 import com.library.payment_service.repository.PaymentRepository;
 
+@Profile("init")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -25,12 +27,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (paymentRepository.count() == 0) {
-            createSampleData();
-            System.out.println("Sample payment data initialized successfully!");
-        } else {
-            System.out.println("Payment data already exists, skipping initialization.");
-        }
+        createSampleData();
+        System.out.println("Sample payment data initialized successfully!");
     }
 
     private void createSampleData() {

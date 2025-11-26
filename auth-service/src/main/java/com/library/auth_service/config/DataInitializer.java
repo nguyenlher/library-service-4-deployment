@@ -1,6 +1,7 @@
 package com.library.auth_service.config;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import com.library.auth_service.entity.Status;
 import com.library.auth_service.entity.User;
 import com.library.auth_service.repository.UserRepository;
 
+@Profile("init")
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -22,14 +24,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if data already exists
-        if (userRepository.count() == 0) {
-            // Create sample users
-            createSampleUsers();
-            System.out.println("Sample users initialized successfully!");
-        } else {
-            System.out.println("Users already exist, skipping initialization.");
-        }
+        // Always create sample users when init profile is active
+        createSampleUsers();
+        System.out.println("Sample users initialized successfully!");
     }
 
     private void createSampleUsers() {
